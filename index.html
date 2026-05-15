@@ -8,6 +8,57 @@
 
 <style>
 
+.logo-wrap{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-top:20px;
+
+  animation: introWrap 2.2s ease forwards;
+  opacity:0;
+}
+
+/* LOGO ANIMATION */
+.logo{
+  width:110px;
+  height:auto;
+
+  opacity:0;
+  transform: scale(0.4) translateY(20px);
+
+  filter: drop-shadow(0 0 30px rgba(90,200,250,.4));
+
+  animation: logoIntro 2.2s ease forwards;
+  animation-delay: 0.2s;
+}
+
+/* WRAP FADE IN */
+@keyframes introWrap{
+  0% { opacity:0; }
+  100% { opacity:1; }
+}
+
+/* MAIN LOGO SEQUENCE */
+@keyframes logoIntro{
+  0%{
+    opacity:0;
+    transform: scale(0.4) translateY(30px);
+    filter: drop-shadow(0 0 0 rgba(90,200,250,0));
+  }
+
+  50%{
+    opacity:1;
+    transform: scale(1.15) translateY(-5px);
+    filter: drop-shadow(0 0 50px rgba(90,200,250,.6));
+  }
+
+  100%{
+    opacity:1;
+    transform: scale(1) translateY(0px);
+    filter: drop-shadow(0 0 20px rgba(90,200,250,.35));
+  }
+}
+
 /* =========================
    GLOBAL
 ========================= */
@@ -285,7 +336,9 @@ a{
 <div class="glow glow2"></div>
 
 <header>
-  <img src="/idea-forge/logo.png" class="logo">
+  <div class="logo-wrap">
+  <img src="logo.png" class="logo">
+  </div>
   <h1>IDEA FORGE</h1>
   <p>Spatial invention workspace</p>
 </header>
