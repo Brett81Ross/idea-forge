@@ -285,10 +285,17 @@ a{
 <div class="glow glow2"></div>
 
 <header>
-  <img src="logo.jpg" class="logo">
+  <img src="./logo.png" class="logo" onerror="this.style.display='none'">
   <h1>IDEA FORGE</h1>
   <p>Spatial invention workspace</p>
 </header>
+
+<p id="debug"></p>
+
+<script>
+document.getElementById("debug").innerText =
+"Logo path test: " + window.location.origin + "/logo.png";
+</script>
    
 <div class="container">
 
