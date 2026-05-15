@@ -285,10 +285,35 @@ a{
 <div class="glow glow2"></div>
 
 <header>
+  <img src="idea-forge-logo.jpg" class="logo">
   <h1>IDEA FORGE</h1>
   <p>Spatial invention workspace</p>
 </header>
 
+   .logo{
+  width:110px;
+  margin-bottom:20px;
+
+  filter:
+    drop-shadow(0 0 20px rgba(90,200,250,.35));
+
+  animation:logoFloat 6s ease-in-out infinite;
+}
+
+@keyframes logoFloat{
+  0%{
+    transform:translateY(0px);
+  }
+
+  50%{
+    transform:translateY(-10px);
+  }
+
+  100%{
+    transform:translateY(0px);
+  }
+}
+   
 <div class="container">
 
   <!-- SUBMIT -->
