@@ -5,9 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" href="/idea-forge/logo.png">
 <title>Idea Forge 3D</title>
-
+<div class="boot-overlay"></div>
 <style>
 
+.boot-overlay{
+  position:fixed;
+  inset:0;
+  background:black;
+  z-index:999;
+
+  animation: bootFade 1.6s ease forwards;
+}
+
+@keyframes bootFade{
+  0%{ opacity:1; }
+  80%{ opacity:1; }
+  100%{
+    opacity:0;
+    pointer-events:none;
+  }
+}
+  
 .logo-wrap{
   display:flex;
   justify-content:center;
