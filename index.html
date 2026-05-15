@@ -160,3 +160,341 @@ header p{
 }
 
 .depth2{
+  transform:translateZ(50px);
+}
+
+.depth3{
+  transform:translateZ(80px);
+}
+
+/* =========================
+   INPUTS
+========================= */
+
+input,
+textarea{
+  width:100%;
+  margin-top:12px;
+
+  padding:15px;
+
+  border:none;
+  outline:none;
+
+  border-radius:16px;
+
+  background:rgba(0,0,0,.3);
+
+  color:white;
+
+  font-size:14px;
+
+  border:1px solid rgba(255,255,255,.08);
+
+  transition:.2s ease;
+}
+
+input:focus,
+textarea:focus{
+  border-color:#5ea2ff;
+  box-shadow:0 0 0 3px rgba(94,162,255,.15);
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+button{
+  margin-top:14px;
+
+  padding:14px 18px;
+
+  border:none;
+  border-radius:16px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #0a84ff,
+      #5ac8fa
+    );
+
+  color:white;
+
+  font-weight:600;
+
+  cursor:pointer;
+
+  transition:.2s ease;
+
+  transform-style:preserve-3d;
+}
+
+button:hover{
+  transform:
+    translateY(-2px)
+    scale(1.04);
+}
+
+/* =========================
+   TEXT
+========================= */
+
+h2{
+  margin-top:0;
+  font-size:24px;
+  letter-spacing:-.5px;
+}
+
+p{
+  color:rgba(255,255,255,.68);
+  line-height:1.5;
+}
+
+a{
+  color:#8ab4ff;
+  text-decoration:none;
+}
+
+/* =========================
+   FLOATING ANIMATION
+========================= */
+
+.floating{
+  animation:float 6s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%{
+    transform:translateY(0px);
+  }
+  50%{
+    transform:translateY(-8px);
+  }
+  100%{
+    transform:translateY(0px);
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="glow glow1"></div>
+<div class="glow glow2"></div>
+
+<header>
+  <h1>IDEA FORGE</h1>
+  <p>Spatial invention workspace</p>
+</header>
+
+<div class="container">
+
+  <!-- SUBMIT -->
+  <div class="card floating">
+
+    <div class="depth3">
+      <h2>Submit Idea</h2>
+    </div>
+
+    <div class="depth2">
+      <input id="title" placeholder="Idea title">
+    </div>
+
+    <div class="depth2">
+      <textarea id="desc" placeholder="Describe your invention..."></textarea>
+    </div>
+
+    <div class="depth1">
+      <button onclick="submitIdea()">Launch Idea</button>
+    </div>
+
+  </div>
+
+  <!-- IDEAS -->
+  <div id="ideas"></div>
+
+</div>
+
+<script>
+
+/* =========================
+   CONFIG
+========================= */
+
+const USER = "brettross";
+const REPO = "idea-forge";
+
+/* =========================
+   LOAD IDEAS
+========================= */
+
+async function loadIdeas(){
+
+  const res = await fetch(
+    `https://api.github.com/repos/${USER}/${REPO}/issues`
+  );
+
+  const data = await res.json();
+
+  const ideas = document.getElementById("ideas");
+
+  ideas.innerHTML = "";
+
+  data.forEach(issue=>{
+
+    ideas.innerHTML += `
+      <div class="card floating">
+
+        <div class="depth3">
+          <h2>${issue.title}</h2>
+        </div>
+
+        <div class="depth2">
+          <p>${issue.body || ""}</p>
+        </div>
+
+        <div class="depth1">
+          <p>💬 ${issue.comments} comments</p>
+
+          <a href="${issue.html_url}" target="_blank">
+            Open Discussion →
+          </a>
+        </div>
+
+      </div>
+    `;
+
+  });
+
+  enable3D();
+}
+
+/* =========================
+   SUBMIT IDEA
+========================= */
+
+async function submitIdea(){
+
+  const title =
+    document.getElementById("title").value;
+
+  const body =
+    document.getElementById("desc").value;
+
+  if(!title || !body) return;
+
+  const token =
+    prompt("Paste GitHub Token");
+
+  await fetch(
+    `https://api.github.com/repos/${USER}/${REPO}/issues`,
+    {
+      method:"POST",
+
+      headers:{
+        "Authorization":`token ${token}`,
+        "Accept":"application/vnd.github+json",
+        "Content-Type":"application/json"
+      },
+
+      body:JSON.stringify({
+        title,
+        body
+      })
+    }
+  );
+
+  loadIdeas();
+}
+
+/* =========================
+   TRUE 3D CARD EFFECT
+========================= */
+
+function enable3D(){
+
+  const cards =
+    document.querySelectorAll(".card");
+
+  cards.forEach(card=>{
+
+    card.addEventListener("mousemove",(e)=>{
+
+      const rect =
+        card.getBoundingClientRect();
+
+      const x =
+        e.clientX - rect.left;
+
+      const y =
+        e.clientY - rect.top;
+
+      const centerX =
+        rect.width / 2;
+
+      const centerY =
+        rect.height / 2;
+
+      const rotateX =
+        ((y - centerY) / 18) * -1;
+
+      const rotateY =
+        (x - centerX) / 18;
+
+      card.style.transform = `
+        rotateX(${rotateX}deg)
+        rotateY(${rotateY}deg)
+        translateY(-6px)
+      `;
+
+    });
+
+    card.addEventListener("mouseleave",()=>{
+
+      card.style.transform = `
+        rotateX(0deg)
+        rotateY(0deg)
+        translateY(0px)
+      `;
+
+    });
+
+  });
+
+}
+
+/* =========================
+   PARALLAX GLOWS
+========================= */
+
+document.addEventListener("mousemove",(e)=>{
+
+  const glow1 =
+    document.querySelector(".glow1");
+
+  const glow2 =
+    document.querySelector(".glow2");
+
+  const x =
+    e.clientX / window.innerWidth;
+
+  const y =
+    e.clientY / window.innerHeight;
+
+  glow1.style.transform =
+    `translate(${x*40}px, ${y*40}px)`;
+
+  glow2.style.transform =
+    `translate(${-x*40}px, ${-y*40}px)`;
+
+});
+
+/* INIT */
+loadIdeas();
+
+</script>
+
+</body>
+</html>
