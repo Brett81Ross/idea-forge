@@ -3,346 +3,193 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" href="/idea-forge/logo.png">
-<title>Idea Forge 3D</title>
-<div class="boot-overlay"></div>
+<title>Idea Forge — Spatial OS</title>
+
 <style>
 
-.boot-overlay{
-  position:fixed;
-  inset:0;
-  background:black;
-  z-index:999;
-
-  animation: bootFade 1.6s ease forwards;
-}
-
-@keyframes bootFade{
-  0%{ opacity:1; }
-  80%{ opacity:1; }
-  100%{
-    opacity:0;
-    pointer-events:none;
-  }
-}
-  
-.logo-wrap{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  margin-top:20px;
-
-  animation: introWrap 2.2s ease forwards;
-  opacity:0;
-}
-
-/* LOGO ANIMATION */
-.logo{
-  width:110px;
-  height:auto;
-
-  opacity:0;
-  transform: scale(0.4) translateY(20px);
-
-  filter: drop-shadow(0 0 30px rgba(90,200,250,.4));
-
-  animation: logoIntro 2.2s ease forwards;
-  animation-delay: 0.2s;
-}
-
-/* WRAP FADE IN */
-@keyframes introWrap{
-  0% { opacity:0; }
-  100% { opacity:1; }
-}
-
-/* MAIN LOGO SEQUENCE */
-@keyframes logoIntro{
-  0%{
-    opacity:0;
-    transform: scale(0.4) translateY(30px);
-    filter: drop-shadow(0 0 0 rgba(90,200,250,0));
-  }
-
-  50%{
-    opacity:1;
-    transform: scale(1.15) translateY(-5px);
-    filter: drop-shadow(0 0 50px rgba(90,200,250,.6));
-  }
-
-  100%{
-    opacity:1;
-    transform: scale(1) translateY(0px);
-    filter: drop-shadow(0 0 20px rgba(90,200,250,.35));
-  }
-}
-
 /* =========================
-   GLOBAL
+   BASE
 ========================= */
-
-*{
-  box-sizing:border-box;
-}
 
 body{
   margin:0;
-  overflow-x:hidden;
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif;
-  background:
-    radial-gradient(circle at top,#1f2330,#05060a 70%);
+  background:black;
   color:white;
-  min-height:100vh;
-  perspective:1800px;
+  overflow:hidden;
 }
 
 /* =========================
-   AMBIENT GLOWS
+   BOOT SCREEN
 ========================= */
 
-.glow{
+.boot{
   position:fixed;
-  width:500px;
-  height:500px;
-  border-radius:50%;
-  filter:blur(120px);
-  opacity:.28;
-  pointer-events:none;
-  z-index:-1;
-  transition:transform .15s linear;
+  inset:0;
+  background:black;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  z-index:9999;
+
+  animation:bootOut 3s ease forwards;
+  animation-delay:2.2s;
 }
 
-.glow1{
-  background:#3b82f6;
-  top:-150px;
-  left:-150px;
+.boot h1{
+  font-size:28px;
+  opacity:0.8;
+  letter-spacing:3px;
+  animation:fadeIn 1s ease forwards;
 }
 
-.glow2{
-  background:#8b5cf6;
-  bottom:-200px;
-  right:-200px;
+.boot p{
+  opacity:0.4;
+  animation:fadeIn 1.5s ease forwards;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(10px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+@keyframes bootOut{
+  to{opacity:0; visibility:hidden;}
 }
 
 /* =========================
-   HEADER
+   MAIN WORLD (3D CAMERA)
+========================= */
+
+.world{
+  transform-style:preserve-3d;
+  perspective:1600px;
+  transform:scale(1.2);
+  opacity:0;
+
+  animation:worldIn 2.5s ease forwards;
+  animation-delay:2.2s;
+}
+
+@keyframes worldIn{
+  from{opacity:0; transform:scale(1.4) rotateX(20deg);}
+  to{opacity:1; transform:scale(1) rotateX(0deg);}
+}
+
+/* =========================
+   HEADER + LOGO
 ========================= */
 
 header{
   text-align:center;
-  padding:80px 20px 40px;
-  transform-style:preserve-3d;
-}
-
-header h1{
-  font-size:64px;
-  margin:0;
-  letter-spacing:-2px;
-  font-weight:700;
-
-  background:linear-gradient(90deg,#fff,#8ab4ff);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-
+  padding:60px 20px;
   transform:translateZ(80px);
 }
 
-header p{
-  margin-top:14px;
-  color:rgba(255,255,255,.6);
-  font-size:18px;
+.logo{
+  width:110px;
+  filter:drop-shadow(0 0 30px rgba(90,200,250,.4));
+  transform:scale(0.2);
+  opacity:0;
 
-  transform:translateZ(40px);
+  animation:logoIn 2.2s ease forwards;
+  animation-delay:2.6s;
+}
+
+@keyframes logoIn{
+  0%{transform:scale(0.2) translateY(30px); opacity:0;}
+  60%{transform:scale(1.3) translateY(-10px); opacity:1;}
+  100%{transform:scale(1) translateY(0px); opacity:1;}
+}
+
+h1{
+  margin:10px 0 0;
+  letter-spacing:2px;
+  opacity:0;
+  animation:fadeIn 1s ease forwards;
+  animation-delay:3s;
 }
 
 /* =========================
-   MAIN LAYOUT
+   CARDS (SPATIAL FLOAT IN)
 ========================= */
 
 .container{
-  width:min(1000px,92%);
+  width:90%;
+  max-width:900px;
   margin:auto;
-
-  display:flex;
-  flex-direction:column;
-  gap:30px;
-
-  transform-style:preserve-3d;
 }
-
-/* =========================
-   GLASS CARDS
-========================= */
 
 .card{
-  position:relative;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:20px;
+  padding:20px;
+  margin:20px 0;
 
-  background:rgba(255,255,255,.06);
+  transform:translateZ(-300px) scale(0.6);
+  opacity:0;
 
-  border:1px solid rgba(255,255,255,.08);
-
-  backdrop-filter:blur(25px);
-  -webkit-backdrop-filter:blur(25px);
-
-  border-radius:28px;
-
-  padding:24px;
-
-  transform-style:preserve-3d;
-
-  box-shadow:
-    0 30px 80px rgba(0,0,0,.6),
-    inset 0 1px 0 rgba(255,255,255,.08);
-
-  transition:
-    transform .18s ease,
-    box-shadow .25s ease,
-    background .25s ease;
+  animation:cardIn 1s ease forwards;
 }
 
-.card::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
+.card:nth-child(1){ animation-delay:3.2s; }
+.card:nth-child(2){ animation-delay:3.5s; }
+.card:nth-child(3){ animation-delay:3.8s; }
 
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255,255,255,.15),
-      transparent 45%
-    );
-
-  pointer-events:none;
-}
-
-.card:hover{
-  background:rgba(255,255,255,.08);
-}
-
-/* =========================
-   3D CONTENT DEPTH
-========================= */
-
-.depth1{
-  transform:translateZ(20px);
-}
-
-.depth2{
-  transform:translateZ(50px);
-}
-
-.depth3{
-  transform:translateZ(80px);
+@keyframes cardIn{
+  to{
+    transform:translateZ(0px) scale(1);
+    opacity:1;
+  }
 }
 
 /* =========================
    INPUTS
 ========================= */
 
-input,
-textarea{
+input,textarea{
   width:100%;
-  margin-top:12px;
-
-  padding:15px;
-
+  margin-top:10px;
+  padding:12px;
+  border-radius:12px;
   border:none;
-  outline:none;
-
-  border-radius:16px;
-
-  background:rgba(0,0,0,.3);
-
+  background:rgba(0,0,0,0.4);
   color:white;
-
-  font-size:14px;
-
-  border:1px solid rgba(255,255,255,.08);
-
-  transition:.2s ease;
-}
-
-input:focus,
-textarea:focus{
-  border-color:#5ea2ff;
-  box-shadow:0 0 0 3px rgba(94,162,255,.15);
 }
 
 /* =========================
-   BUTTONS
+   BUTTON
 ========================= */
 
 button{
-  margin-top:14px;
-
-  padding:14px 18px;
-
+  margin-top:10px;
+  padding:12px;
   border:none;
-  border-radius:16px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #0a84ff,
-      #5ac8fa
-    );
-
+  border-radius:12px;
+  background:#0a84ff;
   color:white;
-
-  font-weight:600;
-
   cursor:pointer;
-
-  transition:.2s ease;
-
-  transform-style:preserve-3d;
-}
-
-button:hover{
-  transform:
-    translateY(-2px)
-    scale(1.04);
 }
 
 /* =========================
-   TEXT
+   SYSTEM READY TEXT
 ========================= */
 
-h2{
-  margin-top:0;
-  font-size:24px;
-  letter-spacing:-.5px;
+.system{
+  position:fixed;
+  bottom:20px;
+  left:20px;
+  font-size:12px;
+  opacity:0;
+
+  animation:sysOn 1s ease forwards;
+  animation-delay:4s;
 }
 
-p{
-  color:rgba(255,255,255,.68);
-  line-height:1.5;
-}
-
-a{
-  color:#8ab4ff;
-  text-decoration:none;
-}
-
-/* =========================
-   FLOATING ANIMATION
-========================= */
-
-.floating{
-  animation:float 6s ease-in-out infinite;
-}
-
-@keyframes float{
-  0%{
-    transform:translateY(0px);
-  }
-  50%{
-    transform:translateY(-8px);
-  }
-  100%{
-    transform:translateY(0px);
-  }
+@keyframes sysOn{
+  to{opacity:0.5;}
 }
 
 </style>
@@ -350,228 +197,108 @@ a{
 
 <body>
 
-<div class="glow glow1"></div>
-<div class="glow glow2"></div>
+<!-- BOOT -->
+<div class="boot">
+  <h1>IDEA FORGE OS</h1>
+  <p>Initializing Spatial System...</p>
+</div>
+
+<!-- SYSTEM READY -->
+<div class="system">SYSTEM READY</div>
+
+<!-- WORLD -->
+<div class="world">
 
 <header>
-  <div class="logo-wrap">
   <img src="logo.png" class="logo">
-  </div>
   <h1>IDEA FORGE</h1>
-  <p>Spatial invention workspace</p>
 </header>
 
-<p id="debug"></p>
-
-<script>
-document.getElementById("debug").innerText =
-"Logo path test: " + window.location.origin + "/logo.png";
-</script>
-   
 <div class="container">
 
-  <!-- SUBMIT -->
-  <div class="card floating">
-
-    <div class="depth3">
-      <h2>Submit Idea</h2>
-    </div>
-
-    <div class="depth2">
-      <input id="title" placeholder="Idea title">
-    </div>
-
-    <div class="depth2">
-      <textarea id="desc" placeholder="Describe your invention..."></textarea>
-    </div>
-
-    <div class="depth1">
-      <button onclick="submitIdea()">Launch Idea</button>
-    </div>
-
+  <div class="card">
+    <h2>Submit Idea</h2>
+    <input placeholder="Idea title">
+    <textarea placeholder="Describe your invention"></textarea>
+    <button onclick="clickSound()">Launch Idea</button>
   </div>
 
-  <!-- IDEAS -->
-  <div id="ideas"></div>
+  <div class="card">
+    <h2>Live Feed</h2>
+    <p>Ideas will appear here in spatial mode.</p>
+  </div>
+
+</div>
 
 </div>
 
 <script>
 
 /* =========================
-   CONFIG
+   AUDIO ENGINE (NO FILES NEEDED)
 ========================= */
 
-const USER = "brettross";
-const REPO = "idea-forge";
+let audioCtx;
 
-/* =========================
-   LOAD IDEAS
-========================= */
+function initAudio(){
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
 
-async function loadIdeas(){
+function clickSound(){
 
-  const res = await fetch(
-    `https://api.github.com/repos/${USER}/${REPO}/issues`
+  if(!audioCtx) initAudio();
+
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+
+  osc.type = "sine";
+  osc.frequency.value = 520;
+
+  gain.gain.value = 0.05;
+
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  osc.start();
+
+  gain.gain.exponentialRampToValueAtTime(
+    0.0001,
+    audioCtx.currentTime + 0.3
   );
 
-  const data = await res.json();
-
-  const ideas = document.getElementById("ideas");
-
-  ideas.innerHTML = "";
-
-  data.forEach(issue=>{
-
-    ideas.innerHTML += `
-      <div class="card floating">
-
-        <div class="depth3">
-          <h2>${issue.title}</h2>
-        </div>
-
-        <div class="depth2">
-          <p>${issue.body || ""}</p>
-        </div>
-
-        <div class="depth1">
-          <p>💬 ${issue.comments} comments</p>
-
-          <a href="${issue.html_url}" target="_blank">
-            Open Discussion →
-          </a>
-        </div>
-
-      </div>
-    `;
-
-  });
-
-  enable3D();
+  osc.stop(audioCtx.currentTime + 0.3);
 }
 
 /* =========================
-   SUBMIT IDEA
+   STARTUP HUM
 ========================= */
 
-async function submitIdea(){
+window.addEventListener("load", ()=>{
 
-  const title =
-    document.getElementById("title").value;
+  initAudio();
 
-  const body =
-    document.getElementById("desc").value;
+  const hum = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
 
-  if(!title || !body) return;
+  hum.type = "sine";
+  hum.frequency.value = 60;
 
-  const token =
-    prompt("Paste GitHub Token");
+  gain.gain.value = 0.02;
 
-  await fetch(
-    `https://api.github.com/repos/${USER}/${REPO}/issues`,
-    {
-      method:"POST",
+  hum.connect(gain);
+  gain.connect(audioCtx.destination);
 
-      headers:{
-        "Authorization":`token ${token}`,
-        "Accept":"application/vnd.github+json",
-        "Content-Type":"application/json"
-      },
+  hum.start();
 
-      body:JSON.stringify({
-        title,
-        body
-      })
-    }
-  );
-
-  loadIdeas();
-}
-
-/* =========================
-   TRUE 3D CARD EFFECT
-========================= */
-
-function enable3D(){
-
-  const cards =
-    document.querySelectorAll(".card");
-
-  cards.forEach(card=>{
-
-    card.addEventListener("mousemove",(e)=>{
-
-      const rect =
-        card.getBoundingClientRect();
-
-      const x =
-        e.clientX - rect.left;
-
-      const y =
-        e.clientY - rect.top;
-
-      const centerX =
-        rect.width / 2;
-
-      const centerY =
-        rect.height / 2;
-
-      const rotateX =
-        ((y - centerY) / 18) * -1;
-
-      const rotateY =
-        (x - centerX) / 18;
-
-      card.style.transform = `
-        rotateX(${rotateX}deg)
-        rotateY(${rotateY}deg)
-        translateY(-6px)
-      `;
-
-    });
-
-    card.addEventListener("mouseleave",()=>{
-
-      card.style.transform = `
-        rotateX(0deg)
-        rotateY(0deg)
-        translateY(0px)
-      `;
-
-    });
-
-  });
-
-}
-
-/* =========================
-   PARALLAX GLOWS
-========================= */
-
-document.addEventListener("mousemove",(e)=>{
-
-  const glow1 =
-    document.querySelector(".glow1");
-
-  const glow2 =
-    document.querySelector(".glow2");
-
-  const x =
-    e.clientX / window.innerWidth;
-
-  const y =
-    e.clientY / window.innerHeight;
-
-  glow1.style.transform =
-    `translate(${x*40}px, ${y*40}px)`;
-
-  glow2.style.transform =
-    `translate(${-x*40}px, ${-y*40}px)`;
+  setTimeout(()=>{
+    gain.gain.exponentialRampToValueAtTime(
+      0.0001,
+      audioCtx.currentTime + 2
+    );
+    hum.stop(audioCtx.currentTime + 2);
+  }, 800);
 
 });
-
-/* INIT */
-loadIdeas();
 
 </script>
 
