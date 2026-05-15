@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Idea Forge 3D</title>
+
+<style>
+
+/* =========================
+   GLOBAL
+========================= */
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  overflow-x:hidden;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif;
+  background:
+    radial-gradient(circle at top,#1f2330,#05060a 70%);
+  color:white;
+  min-height:100vh;
+  perspective:1800px;
+}
+
+/* =========================
+   AMBIENT GLOWS
+========================= */
+
+.glow{
+  position:fixed;
+  width:500px;
+  height:500px;
+  border-radius:50%;
+  filter:blur(120px);
+  opacity:.28;
+  pointer-events:none;
+  z-index:-1;
+  transition:transform .15s linear;
+}
+
+.glow1{
+  background:#3b82f6;
+  top:-150px;
+  left:-150px;
+}
+
+.glow2{
+  background:#8b5cf6;
+  bottom:-200px;
+  right:-200px;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header{
+  text-align:center;
+  padding:80px 20px 40px;
+  transform-style:preserve-3d;
+}
+
+header h1{
+  font-size:64px;
+  margin:0;
+  letter-spacing:-2px;
+  font-weight:700;
+
+  background:linear-gradient(90deg,#fff,#8ab4ff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+
+  transform:translateZ(80px);
+}
+
+header p{
+  margin-top:14px;
+  color:rgba(255,255,255,.6);
+  font-size:18px;
+
+  transform:translateZ(40px);
+}
+
+/* =========================
+   MAIN LAYOUT
+========================= */
+
+.container{
+  width:min(1000px,92%);
+  margin:auto;
+
+  display:flex;
+  flex-direction:column;
+  gap:30px;
+
+  transform-style:preserve-3d;
+}
+
+/* =========================
+   GLASS CARDS
+========================= */
+
+.card{
+  position:relative;
+
+  background:rgba(255,255,255,.06);
+
+  border:1px solid rgba(255,255,255,.08);
+
+  backdrop-filter:blur(25px);
+  -webkit-backdrop-filter:blur(25px);
+
+  border-radius:28px;
+
+  padding:24px;
+
+  transform-style:preserve-3d;
+
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.6),
+    inset 0 1px 0 rgba(255,255,255,.08);
+
+  transition:
+    transform .18s ease,
+    box-shadow .25s ease,
+    background .25s ease;
+}
+
+.card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.15),
+      transparent 45%
+    );
+
+  pointer-events:none;
+}
+
+.card:hover{
+  background:rgba(255,255,255,.08);
+}
+
+/* =========================
+   3D CONTENT DEPTH
+========================= */
+
+.depth1{
+  transform:translateZ(20px);
+}
+
+.depth2{
